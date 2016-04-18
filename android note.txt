@@ -1,0 +1,30 @@
+GitHub Desktop
+
+publish = push
+sync = pull & push
+
+
+Create new project
+
+Company Domain 會對映安裝在手機的路徑
+Project loaction 可設在版控下 或 直接把原路徑做版控
+
+Layout design有問題(可能是xml轉換時留下的cache)，可以執行 Invalidata Cache/Restart... 試試看
+
+valus / dimens.xml 定義距離
+
+Gradle 來編譯APP
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.3.0'
+}
+compile opensurce
+
+
+Genymotion 建立在Intel cpu(virtual box)的模擬器
+開啟GM > 新增模擬器版本 > 按兩下執行 > 到Android Studio點RUN > 這時候就會在清單看到GM點確定即可執行
+
+RUN > 包成APK安裝
+DEBUG > 同步執行
+
