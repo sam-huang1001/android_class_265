@@ -6,12 +6,15 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     TextView mTextView;
     EditText mEditText;
+    RadioGroup mRadioGroup;
+    String sex = "Male";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         mTextView = (TextView) findViewById(R.id.textView);
         mEditText = (EditText) findViewById(R.id.editText);
+        mRadioGroup = (RadioGroup) findViewById(R.id.radioGroup);
 
         //註冊實體鍵盤事件
         mEditText.setOnKeyListener(new View.OnKeyListener() { //參數為Interface
@@ -44,10 +48,23 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        //註冊radio change事件
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(checkedId == R.id.maleRadioButton){
+                    sex = "Male";
+                }else if(checkedId == R.id.femaleRadioButton){
+                    sex = "Female";
+                }
+            }
+        });
     }
 
     public void click(View view){ //view為觸發的元素
         String text = mEditText.getText().toString();
+        text += " sex: " + sex;
         mTextView.setText(text);
         mEditText.setText("");
     }

@@ -31,3 +31,7 @@ DEBUG > 同步執行
 
 View = e 觸發的元素
 
+
+EditText屬性singleLine="true" 不允許換行
+
+自動完成帶入事件的interface參數 Ctrl + Shift + space
