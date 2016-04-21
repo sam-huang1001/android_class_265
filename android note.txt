@@ -35,3 +35,6 @@ View = e 觸發的元素
 EditText屬性singleLine="true" 不允許換行
 
 自動完成帶入事件的interface參數 Ctrl + Shift + space
+※Class必須存在!!
+
+進入別人git下的專案 > 點選Fork，即可將別人的專案Clone到自己的git下

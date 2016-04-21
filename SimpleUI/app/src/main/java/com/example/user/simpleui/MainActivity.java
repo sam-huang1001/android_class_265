@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -15,6 +17,9 @@ public class MainActivity extends AppCompatActivity {
     EditText mEditText;
     RadioGroup mRadioGroup;
     String sex = "Male";
+    String selectedSex = "Male";
+    String name = "";
+    CheckBox mCheckBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         mTextView = (TextView) findViewById(R.id.textView);
         mEditText = (EditText) findViewById(R.id.editText);
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        mCheckBox = (CheckBox) findViewById(R.id.hideCheckBox);
 
         //註冊實體鍵盤事件
         mEditText.setOnKeyListener(new View.OnKeyListener() { //參數為Interface
@@ -53,19 +59,41 @@ public class MainActivity extends AppCompatActivity {
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if(checkedId == R.id.maleRadioButton){
-                    sex = "Male";
-                }else if(checkedId == R.id.femaleRadioButton){
-                    sex = "Female";
+                if (checkedId == R.id.maleRadioButton) {
+                    selectedSex = "Male";
+                } else if (checkedId == R.id.femaleRadioButton) {
+                    selectedSex = "Female";
+                }
+            }
+        });
+
+        //註冊checkbox勾選事件
+        mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!name.equals("")) {
+                    changeTextView();
                 }
             }
         });
     }
 
     public void click(View view){ //view為觸發的元素
-        String text = mEditText.getText().toString();
-        text += " sex: " + sex;
-        mTextView.setText(text);
-        mEditText.setText("");
+        name = mEditText.getText().toString();
+        if(!name.equals("")) {
+            sex = selectedSex;
+            changeTextView();
+            mEditText.setText("");
+        }
+    }
+
+    public void changeTextView(){
+        if(mCheckBox.isChecked()){
+            String text = name;
+            mTextView.setText(text);
+        }else{
+            String text = name + " sex: " + sex;
+            mTextView.setText(text);
+        }
     }
 }
