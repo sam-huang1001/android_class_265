@@ -28,3 +28,6 @@ Genymotion 建立在Intel cpu(virtual box)的模擬器
 RUN > 包成APK安裝
 DEBUG > 同步執行
 
+
+View = e 觸發的元素
+
