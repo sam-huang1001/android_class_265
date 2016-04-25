@@ -40,8 +40,8 @@ public class OrderAdapter extends BaseAdapter{ //最原始的適配器
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) { //指定view
-        Holder holder; //用來保持住UI元件，就不用每次都重新get，以增加效率
+    public View getView(int position, View convertView, ViewGroup parent) { //指定view，重點
+        Holder holder; //用來保持住UI元件的自訂Class，就不用每次都重新get，以增加效率
 
         //每一列list就是一個converView
         if(convertView == null){ //if還未指定converView
@@ -53,7 +53,7 @@ public class OrderAdapter extends BaseAdapter{ //最原始的適配器
             holder.note =  (TextView)convertView.findViewById(R.id.note);
             holder.storeInfo =  (TextView)convertView.findViewById(R.id.store);
 
-            convertView.setTag(holder);
+            convertView.setTag(holder); //存到view的空間
         }else{
             holder = (Holder) convertView.getTag();
         }
