@@ -5,20 +5,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     TextView mTextView;
     EditText mEditText;
     RadioGroup mRadioGroup;
+    ArrayList<Order> orders;
     String drinkName = "black tea";
     String note = "";
     CheckBox mCheckBox;
+    ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         mEditText = (EditText) findViewById(R.id.editText);
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         mCheckBox = (CheckBox) findViewById(R.id.hideCheckBox);
+        mListView = (ListView) findViewById(R.id.listView);
+        orders = new ArrayList<>();
 
         //註冊實體鍵盤事件
         mEditText.setOnKeyListener(new View.OnKeyListener() { //參數為Interface
@@ -62,13 +70,28 @@ public class MainActivity extends AppCompatActivity {
                 drinkName = mRadioButton.getText().toString();
             }
         });
+    }
 
+    private void setupListView(){
+        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, orders); //obj, layout, list
+        //mListView.setAdapter(adapter);
+
+        OrderAdapter adapter = new OrderAdapter(this, orders);
+        mListView.setAdapter(adapter);
     }
 
     public void click(View view){ //view為觸發的元素
         note = mEditText.getText().toString();
         String text = note;
         mTextView.setText(text);
+        //orders.add(text);
         mEditText.setText("");
+
+        Order order = new Order();
+        order.drinkName = drinkName;
+        order.note = note;
+        orders.add(order);
+
+        setupListView();
     }
 }
