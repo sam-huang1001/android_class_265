@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
         note = mEditText.getText().toString();
         String text = note;
         mTextView.setText(text);
-        //orders.add(text);
         mEditText.setText("");
 
         Order order = new Order();

@@ -7,5 +7,4 @@ public class Order {
     String note;
     String drinkName;
     String storeInfo;
-
 }
