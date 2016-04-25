@@ -38,3 +38,5 @@ EditText屬性singleLine="true" 不允許換行
 ※Class必須存在!!
 
 進入別人git下的專案 > 點選Fork，即可將別人的專案Clone到自己的git下
+
+rename也可以使用在改變數上

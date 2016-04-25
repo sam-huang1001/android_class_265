@@ -6,8 +6,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -16,9 +16,8 @@ public class MainActivity extends AppCompatActivity {
     TextView mTextView;
     EditText mEditText;
     RadioGroup mRadioGroup;
-    String sex = "Male";
-    String selectedSex = "Male";
-    String name = "";
+    String drinkName = "black tea";
+    String note = "";
     CheckBox mCheckBox;
 
     @Override
@@ -31,23 +30,23 @@ public class MainActivity extends AppCompatActivity {
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         mCheckBox = (CheckBox) findViewById(R.id.hideCheckBox);
 
-        //µ˘•UπÍ≈È¡‰ΩL®∆•Û
-        mEditText.setOnKeyListener(new View.OnKeyListener() { //∞—º∆¨∞Interface
+        //Ë®ªÂÜäÂØ¶È´îÈçµÁõ§‰∫ã‰ª∂
+        mEditText.setOnKeyListener(new View.OnKeyListener() { //ÂèÉÊï∏ÁÇ∫Interface
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN){
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
                     click(v);
-                    return true; //ƒd∫I°A§£ƒ~ƒÚ∞ı¶Ê
+                    return true; //ÊîîÊà™Ôºå‰∏çÁπºÁ∫åÂü∑Ë°å
                 }
                 return false;
             }
         });
 
-        //µ˘•UµÍ¿¿¡‰ΩL®∆•Û
+        //Ë®ªÂÜäËôõÊì¨ÈçµÁõ§‰∫ã‰ª∂
         mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_DONE){
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
                     click(v);
                     return true;
                 }
@@ -55,45 +54,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //µ˘•Uradio change®∆•Û
+        //Ë®ªÂÜäradio change‰∫ã‰ª∂
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.maleRadioButton) {
-                    selectedSex = "Male";
-                } else if (checkedId == R.id.femaleRadioButton) {
-                    selectedSex = "Female";
-                }
+                RadioButton mRadioButton = (RadioButton) findViewById(checkedId);
+                drinkName = mRadioButton.getText().toString();
             }
         });
 
-        //µ˘•Ucheckbox§ƒøÔ®∆•Û
-        mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!name.equals("")) {
-                    changeTextView();
-                }
-            }
-        });
     }
 
-    public void click(View view){ //view¨∞ƒ≤µo™∫§∏Ø¿
-        name = mEditText.getText().toString();
-        if(!name.equals("")) {
-            sex = selectedSex;
-            changeTextView();
-            mEditText.setText("");
-        }
-    }
-
-    public void changeTextView(){
-        if(mCheckBox.isChecked()){
-            String text = name;
-            mTextView.setText(text);
-        }else{
-            String text = name + " sex: " + sex;
-            mTextView.setText(text);
-        }
+    public void click(View view){ //viewÁÇ∫Ëß∏ÁôºÁöÑÂÖÉÁ¥†
+        note = mEditText.getText().toString();
+        String text = note;
+        mTextView.setText(text);
+        mEditText.setText("");
     }
 }
