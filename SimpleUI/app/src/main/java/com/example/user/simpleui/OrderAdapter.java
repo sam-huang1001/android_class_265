@@ -41,7 +41,8 @@ public class OrderAdapter extends BaseAdapter{ //最原始的適配器
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) { //指定view
-        Holder holder;
+        Holder holder; //用來保持住UI元件，就不用每次都重新get，以增加效率
+
         //每一列list就是一個converView
         if(convertView == null){ //if還未指定converView
             convertView = inflater.inflate(R.layout.listview_item,null);
