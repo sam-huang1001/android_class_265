@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     String note = "";
     CheckBox mCheckBox;
     ListView mListView;
+    Spinner mSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         mCheckBox = (CheckBox) findViewById(R.id.hideCheckBox);
         mListView = (ListView) findViewById(R.id.listView);
+        mSpinner = (Spinner) findViewById(R.id.spinner);
         orders = new ArrayList<>();
 
         //註冊實體鍵盤事件
@@ -70,14 +73,24 @@ public class MainActivity extends AppCompatActivity {
                 drinkName = mRadioButton.getText().toString();
             }
         });
+
+        setupListView();
+        setupSpinner();
     }
 
-    private void setupListView(){
+    void setupListView(){
         //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, orders); //obj, layout, list
         //mListView.setAdapter(adapter);
 
         OrderAdapter adapter = new OrderAdapter(this, orders);
         mListView.setAdapter(adapter);
+    }
+
+    void setupSpinner(){
+        String[] data = getResources().getStringArray(R.array.storeInfo);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, data);
+
+        mSpinner.setAdapter(adapter);
     }
 
     public void click(View view){ //view為觸發的元素
@@ -89,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         Order order = new Order();
         order.drinkName = drinkName;
         order.note = note;
+        order.storeInfo = (String) mSpinner.getSelectedItem();
         orders.add(order);
 
         setupListView();
