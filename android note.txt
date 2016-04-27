@@ -46,3 +46,5 @@ refactor > rename也可以使用在改變數上
 public void click(View view){ //view為觸發的元素
 
 adb.exe掛掉 從工作管理員的處理程序砍掉adb.exe再執行看看
+
+test
