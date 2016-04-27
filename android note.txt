@@ -8,14 +8,14 @@ sync = pull & push
 
 Create new project
 
-Company Domain ·|¹ï¬M¦w¸Ë¦b¤â¾÷ªº¸ô®|
-Project loaction ¥i³]¦bª©±±¤U ©Î ª½±µ§â­ì¸ô®|°µª©±±
+Company Domain æœƒå°æ˜ å®‰è£åœ¨æ‰‹æ©Ÿçš„è·¯å¾‘
+Project loaction å¯è¨­åœ¨ç‰ˆæ§ä¸‹ æˆ– ç›´æ¥æŠŠåŸè·¯å¾‘åšç‰ˆæ§
 
-Layout design¦³°İÃD(¥i¯à¬OxmlÂà´«®É¯d¤Uªºcache)¡A¥i¥H°õ¦æ Invalidata Cache/Restart... ¸Õ¸Õ¬İ
+Layout designæœ‰å•é¡Œ(å¯èƒ½æ˜¯xmlè½‰æ›æ™‚ç•™ä¸‹çš„cache)ï¼Œå¯ä»¥åŸ·è¡Œ Invalidata Cache/Restart... è©¦è©¦çœ‹
 
-valus / dimens.xml ©w¸q¶ZÂ÷
+valus / dimens.xml å®šç¾©è·é›¢
 
-Gradle ¨Ó½sÄ¶APP
+Gradle ä¾†ç·¨è­¯APP
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
@@ -24,27 +24,25 @@ dependencies {
 compile opensurce
 
 
-Genymotion «Ø¥ß¦bIntel cpu(virtual box)ªº¼ÒÀÀ¾¹
-¶}±ÒGM > ·s¼W¼ÒÀÀ¾¹ª©¥» > «ö¨â¤U°õ¦æ > ¨ìAndroid StudioÂIRUN > ³o®É­Ô´N·|¦b²M³æ¬İ¨ìGMÂI½T©w§Y¥i°õ¦æ
+Genymotion å»ºç«‹åœ¨Intel cpu(virtual box)çš„æ¨¡æ“¬å™¨
+é–‹å•ŸGM > æ–°å¢æ¨¡æ“¬å™¨ç‰ˆæœ¬ > æŒ‰å…©ä¸‹åŸ·è¡Œ > åˆ°Android Studioé»RUN > é€™æ™‚å€™å°±æœƒåœ¨æ¸…å–®çœ‹åˆ°GMé»ç¢ºå®šå³å¯åŸ·è¡Œ
 
-RUN > ¥]¦¨APK¦w¸Ë
-DEBUG > ¦P¨B°õ¦æ
-
-
-View = e Ä²µoªº¤¸¯À
+RUN > åŒ…æˆAPKå®‰è£
+DEBUG > åŒæ­¥åŸ·è¡Œ
 
 
-EditTextÄİ©ÊsingleLine="true" ¤£¤¹³\´«¦æ
+View = e è§¸ç™¼çš„å…ƒç´ 
 
-¦Û°Ê§¹¦¨±a¤J¨Æ¥óªºinterface°Ñ¼Æ Ctrl + Shift + space
-¡°Class¥²¶·¦s¦b!!
 
-¶i¤J§O¤Hgit¤Uªº±M®× > ÂI¿ïFork¡A§Y¥i±N§O¤Hªº±M®×Clone¨ì¦Û¤vªºgit¤U
+EditTextå±¬æ€§singleLine="true" ä¸å…è¨±æ›è¡Œ
 
-refactor > rename¤]¥i¥H¨Ï¥Î¦b§ïÅÜ¼Æ¤W
+è‡ªå‹•å®Œæˆå¸¶å…¥äº‹ä»¶çš„interfaceåƒæ•¸ Ctrl + Shift + space
+â€»Classå¿…é ˆå­˜åœ¨!!
 
-public void click(View view){ //view¬°Ä²µoªº¤¸¯À
+é€²å…¥åˆ¥äººgitä¸‹çš„å°ˆæ¡ˆ > é»é¸Forkï¼Œå³å¯å°‡åˆ¥äººçš„å°ˆæ¡ˆCloneåˆ°è‡ªå·±çš„gitä¸‹
 
-adb.exe±¾±¼ ±q¤u§@ºŞ²z­ûªº³B²zµ{§Ç¬å±¼adb.exe¦A°õ¦æ¬İ¬İ
+refactor > renameä¹Ÿå¯ä»¥ä½¿ç”¨åœ¨æ”¹è®Šæ•¸ä¸Š
 
-test
+public void click(View view){ //viewç‚ºè§¸ç™¼çš„å…ƒç´ 
+
+adb.exeæ›æ‰ å¾å·¥ä½œç®¡ç†å“¡çš„è™•ç†ç¨‹åºç æ‰adb.exeå†åŸ·è¡Œçœ‹çœ‹
