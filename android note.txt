@@ -1,4 +1,4 @@
-http://bit.ly/266t6zS
+﻿http://bit.ly/266t6zS
 
 GitHub Desktop
 
@@ -15,7 +15,7 @@ Layout design有問題(可能是xml轉換時留下的cache)，可以執行 Inval
 
 valus / dimens.xml 定義距離
 
-Gradle 來編譯APP
+Gradle 來編譯APP (呼叫jcenter())
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
