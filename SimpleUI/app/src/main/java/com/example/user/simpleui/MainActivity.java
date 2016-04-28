@@ -1,5 +1,7 @@
 package com.example.user.simpleui;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     ListView mListView;
     Spinner mSpinner;
 
+    SharedPreferences sp; //只有read
+    SharedPreferences.Editor editor; //這個才能write
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,10 +49,23 @@ public class MainActivity extends AppCompatActivity {
         mSpinner = (Spinner) findViewById(R.id.spinner);
         orders = new ArrayList<>();
 
+        sp = getSharedPreferences("setting", Context.MODE_PRIVATE);
+        editor = sp.edit();
+
+        String[] data = Utils.readFile(this, "notes").split("\n");
+
+        mTextView.setText(data[0]);
+
+        mEditText.setText(sp.getString("editText", "")); //第二個參數是取不到值得default value
+
         //註冊實體鍵盤事件
         mEditText.setOnKeyListener(new View.OnKeyListener() { //參數為Interface
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
+                String text = mEditText.getText().toString();
+                editor.putString("editText",text);
+                editor.apply();
+
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
                     click(v);
                     return true; //攔截，不繼續執行
@@ -68,10 +86,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        mRadioGroup.check(sp.getInt("radioGroup",R.id.blackTeaRadioButton));
+
         //註冊radio change事件
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                editor.putInt("radioGroup", checkedId);
+                editor.apply();
+
                 RadioButton mRadioButton = (RadioButton) findViewById(checkedId);
                 drinkName = mRadioButton.getText().toString();
             }
@@ -109,13 +132,16 @@ public class MainActivity extends AppCompatActivity {
         note = mEditText.getText().toString();
         String text = note;
         mTextView.setText(text);
-        mEditText.setText("");
 
         Order order = new Order();
         order.drinkName = drinkName;
         order.note = note;
         order.storeInfo = (String) mSpinner.getSelectedItem();
         orders.add(order);
+
+        Utils.writeFile(this, "notes", order.note + '\n');
+
+        mEditText.setText("");
 
         setupListView();
     }
