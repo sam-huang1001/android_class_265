@@ -10,16 +10,17 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.Inflater;
 
 /**
  * Created by user on 2016/4/25.
  */
 public class OrderAdapter extends BaseAdapter{ //最原始的適配器
-    ArrayList<Order> orders;
+    List<Order> orders;
     LayoutInflater inflater; //做layout轉換
 
-    public  OrderAdapter(Context context, ArrayList<Order> orders){
+    public  OrderAdapter(Context context, List<Order> orders){
         this.inflater = LayoutInflater.from(context);
         this.orders = orders;
     }
@@ -58,9 +59,9 @@ public class OrderAdapter extends BaseAdapter{ //最原始的適配器
             holder = (Holder) convertView.getTag();
         }
 
-        holder.drinkName.setText(orders.get(position).drinkName);
-        holder.note.setText(orders.get(position).note);
-        holder.storeInfo.setText(orders.get(position).storeInfo);
+        holder.drinkName.setText(orders.get(position).getDrinkName());
+        holder.note.setText(orders.get(position).getNote());
+        holder.storeInfo.setText(orders.get(position).getStoreInfo());
 
         return convertView;
     }

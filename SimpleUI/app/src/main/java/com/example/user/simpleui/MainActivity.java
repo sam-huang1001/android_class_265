@@ -21,13 +21,17 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
+
 public class MainActivity extends AppCompatActivity {
 
     TextView mTextView;
     EditText mEditText;
     RadioGroup mRadioGroup;
     ArrayList<Order> orders;
-    String drinkName = "black tea";
+    String drinkName;
     String note = "";
     CheckBox mCheckBox;
     ListView mListView;
@@ -35,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
     SharedPreferences sp; //只有read
     SharedPreferences.Editor editor; //這個才能write
+
+    Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +58,10 @@ public class MainActivity extends AppCompatActivity {
         sp = getSharedPreferences("setting", Context.MODE_PRIVATE);
         editor = sp.edit();
 
-        String[] data = Utils.readFile(this, "notes").split("\n");
-
-        mTextView.setText(data[0]);
+        // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(this).build();
+        // Get a Realm instance for this thread
+        realm = Realm.getInstance(realmConfig);
 
         mEditText.setText(sp.getString("editText", "")); //第二個參數是取不到值得default value
 
@@ -63,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 String text = mEditText.getText().toString();
-                editor.putString("editText",text);
+                editor.putString("editText", text);
                 editor.apply();
 
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
@@ -86,7 +93,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mRadioGroup.check(sp.getInt("radioGroup",R.id.blackTeaRadioButton));
+        int checkedId = sp.getInt("radioGroup", R.id.blackTeaRadioButton);
+        mRadioGroup.check(checkedId);
+
+        RadioButton mRadioButton = (RadioButton) findViewById(checkedId);
+        drinkName = mRadioButton.getText().toString();
 
         //註冊radio change事件
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -105,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) { //view = view 的layout
                 Order order = (Order) parent.getAdapter().getItem(position); //因為get是回傳Obj所以要明確指定型態
                 //Toast.makeText(MainActivity.this, order.note, Toast.LENGTH_SHORT).show(); //因為是在new的物件裡面，所以this不是指MainActivity
-                Snackbar.make(view, order.note, Snackbar.LENGTH_LONG).show(); //新UI設計，優點: 1.可以再click進去提供更多訊息(使用setAction()定義)  2.與其他UI元件是可互動的
+                Snackbar.make(view, order.getNote(), Snackbar.LENGTH_LONG).show(); //新UI設計，優點: 1.可以再click進去提供更多訊息(使用setAction()定義)  2.與其他UI元件是可互動的
             }
         });
 
@@ -116,8 +127,8 @@ public class MainActivity extends AppCompatActivity {
     void setupListView(){
         //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, orders); //obj, layout, list
         //mListView.setAdapter(adapter);
-
-        OrderAdapter adapter = new OrderAdapter(this, orders);
+        RealmResults results = realm.allObjects(Order.class); //取出物件所有資料
+        OrderAdapter adapter = new OrderAdapter(this, results.subList(0,results.size()));
         mListView.setAdapter(adapter);
     }
 
@@ -134,12 +145,14 @@ public class MainActivity extends AppCompatActivity {
         mTextView.setText(text);
 
         Order order = new Order();
-        order.drinkName = drinkName;
-        order.note = note;
-        order.storeInfo = (String) mSpinner.getSelectedItem();
-        orders.add(order);
+        order.setDrinkName(drinkName);
+        order.setNote(note);
+        order.setStoreInfo((String) mSpinner.getSelectedItem());
 
-        Utils.writeFile(this, "notes", order.note + '\n');
+        // Persist your data easily
+        realm.beginTransaction();
+        realm.copyToRealm(order);
+        realm.commitTransaction();
 
         mEditText.setText("");
 

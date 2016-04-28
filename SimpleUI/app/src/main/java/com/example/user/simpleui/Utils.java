@@ -40,4 +40,10 @@ public class Utils {
         }
         return "";
     }
+    /** use example
+        String[] data = Utils.readFile(this, "notes").split("\n");
+        mTextView.setText(data[0]);
+
+        Utils.writeFile(this, "notes", order.note + '\n');
+        */
 }
