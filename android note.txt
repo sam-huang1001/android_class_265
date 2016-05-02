@@ -50,3 +50,13 @@ adb.exe掛掉 從工作管理員的處理程序砍掉adb.exe再執行看看
 SharedPreferences 小量單純的資料，大量使用SQLite或NoSQL
 
 NoSQL: https://realm.io/
+
+
+生命週期
+onCreate 只有記憶體 setContentView是要給下個step用
+onStart 搶螢幕
+紅色框框內才是真正能與使用者互動的週期 only one activity
+onResume 當奪取螢幕後，其他Activity會被踢出(呼叫onStop)
+onPause 準備讓出使用權
+
+onStop 停止Activity，但未釋出記憶體。會在這做一些save action
