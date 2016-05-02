@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 /**
  * Created by user on 2016/4/25.
@@ -50,7 +50,7 @@ public class OrderAdapter extends BaseAdapter{ //最原始的適配器
 
             holder = new Holder();
 
-            holder.drinkName = (TextView)convertView.findViewById(R.id.drinkName);
+            holder.cupCount = (TextView)convertView.findViewById(R.id.cupCount);
             holder.note =  (TextView)convertView.findViewById(R.id.note);
             holder.storeInfo =  (TextView)convertView.findViewById(R.id.store);
 
@@ -59,7 +59,21 @@ public class OrderAdapter extends BaseAdapter{ //最原始的適配器
             holder = (Holder) convertView.getTag();
         }
 
-        holder.drinkName.setText(orders.get(position).getDrinkName());
+        int total = 0;
+
+        try {
+            JSONArray mJsonArray = new JSONArray(orders.get(position).getMenuResults());
+            for(int i=0; i < mJsonArray.length(); i++){
+                JSONObject menu = mJsonArray.getJSONObject(i);
+
+                total += menu.getInt("mCupCount");
+                total += menu.getInt("lCupCount");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        holder.cupCount.setText(String.valueOf(total));
         holder.note.setText(orders.get(position).getNote());
         holder.storeInfo.setText(orders.get(position).getStoreInfo());
 
@@ -67,7 +81,7 @@ public class OrderAdapter extends BaseAdapter{ //最原始的適配器
     }
 
     class Holder{
-        TextView drinkName;
+        TextView cupCount;
         TextView note;
         TextView storeInfo;
     }

@@ -15,11 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -29,15 +27,18 @@ import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int REQUEST_CODE_MENU_ACTIVITY = 0; //值為自訂
+
     TextView mTextView;
     EditText mEditText;
     RadioGroup mRadioGroup;
     ArrayList<Order> orders;
-    String drinkName;
+    //String drinkName;
     String note = "";
     CheckBox mCheckBox;
     ListView mListView;
     Spinner mSpinner;
+    String menuResult;
 
     SharedPreferences sp; //只有read
     SharedPreferences.Editor editor; //這個才能write
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         editor = sp.edit();
 
         // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(this).build();
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(this).deleteRealmIfMigrationNeeded().build();
         // Get a Realm instance for this thread
         realm = Realm.getInstance(realmConfig);
 
@@ -164,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
         mTextView.setText(text);
 
         Order order = new Order(); //自訂物件，物件是繼承realmObject
-        order.setDrinkName(drinkName);
+        order.setMenuResults(menuResult);
         order.setNote(note);
         order.setStoreInfo((String) mSpinner.getSelectedItem());
 
@@ -174,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
         realm.commitTransaction();
 
         mEditText.setText("");
+        menuResult = "";
 
         setupListView();
     }
@@ -181,7 +183,17 @@ public class MainActivity extends AppCompatActivity {
     public void goToMenu(View view){
         Intent intent = new Intent(); //activitty之間的媒介
         intent.setClass(this, DrinkMenuActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_MENU_ACTIVITY); //第二個參數requestCode是用來識別目的的Activity
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){ //startActivityFroResult 呼叫的Activity有人說OK或說其它(?)就觸發
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE_MENU_ACTIVITY){ //確認回傳的Activity
+            if(resultCode == RESULT_OK){ //檢查是否呼叫的Activity到底有沒有說OK
+                menuResult = data.getStringExtra("result");
+            }
+        }
     }
 
     @Override

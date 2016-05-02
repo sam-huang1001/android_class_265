@@ -1,5 +1,6 @@
 package com.example.user.simpleui;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,7 +37,11 @@ public class DrinkMenuActivity extends AppCompatActivity {
     }
 
     public void done(View view){
-        JSONArray mjsonArray= getData();
+        Intent intent = new Intent();
+        intent.putExtra("result",getData().toString()); //用toString可以直接把json array解成字串 "[{...},{...] ...,{}]"
+
+        setResult(RESULT_OK, intent); //跟呼叫我的Activity說我OK了
+        finish(); // 結束this activity
     }
 
     private JSONArray getData(){
@@ -57,7 +62,7 @@ public class DrinkMenuActivity extends AppCompatActivity {
             try {
                 mJsonObject.put("drinkName", drinkName);
                 mJsonObject.put("mCupCount", mCup);
-                mJsonObject.put("lCupCountr", lCup);
+                mJsonObject.put("lCupCount", lCup);
 
                 mJsonArray.put(mJsonObject);
             } catch (JSONException e) {
