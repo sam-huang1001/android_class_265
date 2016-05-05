@@ -64,3 +64,10 @@ onStop 停止Activity，但未釋出記憶體。會在這做一些save action
 平分等份設法
 width: 0dp
 weight: 1 權重;比例 佔全部份數的幾份，分母為同層的元件數目 ex1: Tv(1) Tv(1) Tv(1) 每個都是1/3  ex2: Tv(1) Tv(2) Tv(1) 各是 1/4  2/4  1/4 
+
+
+Parse 
+open source的server
+site1: https://dashboard.back4app.com
+site2: https://parse.com/
+sign up > new build app > 取得資料到app貼上

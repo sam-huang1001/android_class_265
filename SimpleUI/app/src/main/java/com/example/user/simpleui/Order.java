@@ -1,5 +1,8 @@
 package com.example.user.simpleui;
 
+import com.parse.ParseObject;
+import com.parse.SaveCallback;
+
 import io.realm.RealmObject;
 
 /**
@@ -32,5 +35,14 @@ public class Order extends RealmObject{
 
     public void setStoreInfo(String storeInfo) {
         this.storeInfo = storeInfo;
+    }
+
+    public  void saveToRemote(SaveCallback saveCallback){
+        ParseObject parseObject = new ParseObject("Order");
+        parseObject.put("note", note);
+        parseObject.put("storeInfo", storeInfo);
+        parseObject.put("menuResults", menuResults);
+
+        parseObject.saveInBackground(saveCallback);
     }
 }

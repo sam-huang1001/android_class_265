@@ -18,8 +18,16 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -64,8 +72,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
         RealmConfiguration realmConfig = new RealmConfiguration.Builder(this).deleteRealmIfMigrationNeeded().build();
+        Realm.setDefaultConfiguration(realmConfig);
         // Get a Realm instance for this thread
-        realm = Realm.getInstance(realmConfig);
+        realm = Realm.getDefaultInstance();
 
         mEditText.setText(sp.getString("editText", "")); //第二個參數是取不到值得default value
 
@@ -147,9 +156,36 @@ public class MainActivity extends AppCompatActivity {
     void setupListView(){
         //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, orders); //obj, layout, list
         //mListView.setAdapter(adapter);
-        RealmResults results = realm.allObjects(Order.class); //取出物件所有資料
-        OrderAdapter adapter = new OrderAdapter(this, results.subList(0,results.size()));
-        mListView.setAdapter(adapter);
+
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Order");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) { //objects 回傳的資料
+                if(e != null){
+                    Toast.makeText(MainActivity.this, "query fail: "+e.toString(),Toast.LENGTH_LONG).show();
+
+                    //讀不到remote就讀local
+                    Realm realm = Realm.getDefaultInstance();
+                    RealmResults results = realm.allObjects(Order.class); //取出物件所有資料
+                    OrderAdapter adapter = new OrderAdapter(MainActivity.this, results.subList(0,results.size()));
+                    mListView.setAdapter(adapter);
+                    realm.close();
+                    return;
+                }
+
+                List<Order> orders = new ArrayList<Order>();
+                for(int i=0; i<objects.size(); i++){
+                    Order order = new Order();
+                        order.setNote(objects.get(i).getString("note"));
+                        order.setStoreInfo(objects.get(i).getString("storeInfo"));
+                        order.setMenuResults(objects.get(i).getString("menuResults"));
+                        orders.add(order);
+                }
+
+                OrderAdapter adapter = new OrderAdapter(MainActivity.this, orders);
+                mListView.setAdapter(adapter);
+            }
+        });
     }
 
     void setupSpinner(){
@@ -169,15 +205,21 @@ public class MainActivity extends AppCompatActivity {
         order.setNote(note);
         order.setStoreInfo((String) mSpinner.getSelectedItem());
 
-        // Persist your data easily
-        realm.beginTransaction();
-        realm.copyToRealm(order);
-        realm.commitTransaction();
+        SaveCallbackWithRealm callbackWithRealm = new SaveCallbackWithRealm(order, new SaveCallback() { //多了第一個參數，目的是要接realmObject
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Toast.makeText(MainActivity.this, "save fail: " + e.toString(), Toast.LENGTH_LONG).show();
+                }
 
-        mEditText.setText("");
-        menuResult = "";
+                mEditText.setText("");
+                menuResult = "";
 
-        setupListView();
+                setupListView();
+            }
+        });
+
+        order.saveToRemote(callbackWithRealm);
     }
 
     public void goToMenu(View view){
@@ -223,6 +265,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        realm.close();
         Log.d("debug", "Main Activity OnDestroy");
     }
 
