@@ -231,10 +231,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void setupSpinner(){
-        String[] data = getResources().getStringArray(R.array.storeInfo);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, data);
 
-        mSpinner.setAdapter(adapter);
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("StoreInfo");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) { //objects 回傳的資料
+                if (e != null) {
+                    Toast.makeText(MainActivity.this, "storeInfo query fail: " + e.toString(), Toast.LENGTH_LONG).show();
+                    mProgressBar.setVisibility(View.GONE); //關掉progress bar
+                    return;
+                }
+
+                int objSize = objects.size();
+                String[] store_arr = new String[objSize];
+                for (int i = 0; i < objects.size(); i++) {
+                    store_arr[i] = objects.get(i).getString("name");
+                }
+
+                mProgressBar.setVisibility(View.GONE); //關掉progress bar
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, store_arr);
+                mSpinner.setAdapter(adapter);
+            }
+        });
     }
 
     public void click(View view){ //view為觸發的元素
