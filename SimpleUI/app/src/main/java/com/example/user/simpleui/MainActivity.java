@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -36,6 +37,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_ORDER_MENU_ACTIVITY = 0; //值為自訂
     private static final int REQUEST_CODE_CAMERA_ACTIVITY = 1;
+
+    private boolean hasPhoto = false;
 
     TextView mTextView;
     EditText mEditText;
@@ -149,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) { //view = view 的layout
@@ -193,8 +198,8 @@ public class MainActivity extends AppCompatActivity {
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) { //objects 回傳的資料
-                if(e != null){
-                    Toast.makeText(MainActivity.this, "query fail: "+e.toString(),Toast.LENGTH_LONG).show();
+                if (e != null) {
+                    Toast.makeText(MainActivity.this, "query fail: " + e.toString(), Toast.LENGTH_LONG).show();
                     mProgressBar.setVisibility(View.GONE); //關掉progress bar
                     return;
                 }
@@ -202,18 +207,18 @@ public class MainActivity extends AppCompatActivity {
                 List<Order> orders = new ArrayList<Order>();
                 Realm realm = Realm.getDefaultInstance();
 
-                for(int i=0; i<objects.size(); i++){
+                for (int i = 0; i < objects.size(); i++) {
                     Order order = new Order();
-                        order.setNote(objects.get(i).getString("note"));
-                        order.setStoreInfo(objects.get(i).getString("storeInfo"));
-                        order.setMenuResults(objects.get(i).getString("menuResults"));
-                        orders.add(order);
+                    order.setNote(objects.get(i).getString("note"));
+                    order.setStoreInfo(objects.get(i).getString("storeInfo"));
+                    order.setMenuResults(objects.get(i).getString("menuResults"));
+                    orders.add(order);
 
-                        if(results.size() <= i){
-                            realm.beginTransaction();
-                            realm.copyToRealm(order);
-                            realm.commitTransaction();
-                        }
+                    if (results.size() <= i) {
+                        realm.beginTransaction();
+                        realm.copyToRealm(order);
+                        realm.commitTransaction();
+                    }
                 }
 
                 realm.close();
@@ -242,6 +247,16 @@ public class MainActivity extends AppCompatActivity {
         order.setNote(note);
         order.setStoreInfo((String) mSpinner.getSelectedItem());
 
+        if(hasPhoto){
+            Uri uri = Utils.getPhotoURI();
+            byte[] photo = Utils.uriToBytes(this, uri);
+            if(photo == null){
+                Log.d("debug", "Read photo fail");
+            }else{
+                order.photo = photo;
+            }
+        }
+
         SaveCallbackWithRealm callbackWithRealm = new SaveCallbackWithRealm(order, new SaveCallback() { //多了第一個參數，目的是要接realmObject
             @Override
             public void done(ParseException e) {
@@ -251,6 +266,8 @@ public class MainActivity extends AppCompatActivity {
 
                 mEditText.setText("");
                 menuResult = "";
+                photoImageView.setImageResource(0);
+                hasPhoto = false;
 
                 setupListView();
             }
@@ -275,6 +292,7 @@ public class MainActivity extends AppCompatActivity {
         }else if(requestCode == REQUEST_CODE_CAMERA_ACTIVITY){
             if(resultCode == RESULT_OK){
                 photoImageView.setImageURI(Utils.getPhotoURI());
+                hasPhoto = true;
             }
         }
     }
