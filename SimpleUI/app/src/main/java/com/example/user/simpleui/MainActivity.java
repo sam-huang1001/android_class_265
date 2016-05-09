@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     ListView mListView;
     Spinner mSpinner;
     String menuResult;
+    ProgressBar mProgressBar;
 
     SharedPreferences sp; //只有read
     SharedPreferences.Editor editor; //這個才能write
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         mCheckBox = (CheckBox) findViewById(R.id.hideCheckBox);
         mListView = (ListView) findViewById(R.id.listView);
         mSpinner = (Spinner) findViewById(R.id.spinner);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         orders = new ArrayList<>();
 
         sp = getSharedPreferences("setting", Context.MODE_PRIVATE);
@@ -157,6 +160,8 @@ public class MainActivity extends AppCompatActivity {
         //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, orders); //obj, layout, list
         //mListView.setAdapter(adapter);
 
+        mProgressBar.setVisibility(View.VISIBLE);
+
         final RealmResults results = realm.allObjects(Order.class); //取出物件所有資料
         OrderAdapter adapter = new OrderAdapter(MainActivity.this, results.subList(0,results.size()));
         mListView.setAdapter(adapter);
@@ -168,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
             public void done(List<ParseObject> objects, ParseException e) { //objects 回傳的資料
                 if(e != null){
                     Toast.makeText(MainActivity.this, "query fail: "+e.toString(),Toast.LENGTH_LONG).show();
+                    mProgressBar.setVisibility(View.GONE); //關掉progress bar
                     return;
                 }
 
@@ -189,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 realm.close();
+                mProgressBar.setVisibility(View.GONE); //關掉progress bar
 
                 OrderAdapter adapter = new OrderAdapter(MainActivity.this, orders);
                 mListView.setAdapter(adapter);
