@@ -1,9 +1,14 @@
 package com.example.user.simpleui;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -16,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
@@ -35,10 +41,12 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+import io.realm.internal.Util;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE_MENU_ACTIVITY = 0; //值為自訂
+    private static final int REQUEST_CODE_ORDER_MENU_ACTIVITY = 0; //值為自訂
+    private static final int REQUEST_CODE_CAMERA_ACTIVITY = 1;
 
     TextView mTextView;
     EditText mEditText;
@@ -51,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     Spinner mSpinner;
     String menuResult;
     ProgressBar mProgressBar;
+    ImageView photoImageView;
 
     SharedPreferences sp; //只有read
     SharedPreferences.Editor editor; //這個才能write
@@ -70,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         mListView = (ListView) findViewById(R.id.listView);
         mSpinner = (Spinner) findViewById(R.id.spinner);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        photoImageView = (ImageView) findViewById(R.id.imageView);
         orders = new ArrayList<>();
 
         sp = getSharedPreferences("setting", Context.MODE_PRIVATE);
@@ -242,22 +252,26 @@ public class MainActivity extends AppCompatActivity {
     public void goToMenu(View view){
         Intent intent = new Intent(); //activitty之間的媒介
         intent.setClass(this, DrinkMenuActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_MENU_ACTIVITY); //第二個參數requestCode是用來識別目的的Activity
+        startActivityForResult(intent, REQUEST_CODE_ORDER_MENU_ACTIVITY); //第二個參數requestCode是用來識別目的的Activity
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){ //startActivityFroResult 呼叫的Activity有人說OK或說其它(?)就觸發
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CODE_MENU_ACTIVITY){ //確認回傳的Activity
+        if(requestCode == REQUEST_CODE_ORDER_MENU_ACTIVITY){ //確認回傳的Activity
             if(resultCode == RESULT_OK){ //檢查是否呼叫的Activity到底有沒有說OK
                 menuResult = data.getStringExtra("result");
+            }
+        }else if(requestCode == REQUEST_CODE_CAMERA_ACTIVITY){
+            if(resultCode == RESULT_OK){
+                photoImageView.setImageURI(Utils.getPhotoURI());
             }
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu); //second arg = 要inflate到哪去
+            getMenuInflater().inflate(R.menu.main_menu, menu); //second arg = 要inflate到哪去
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -266,9 +280,23 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         if(id == R.id.action_take_photo){
             Toast.makeText(this, "take photo" , Toast.LENGTH_LONG).show();
+            goToCamera();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void goToCamera(){
+        if(Build.VERSION.SDK_INT >= 23){ //check API version
+            if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){ //確認使用者是否已允許存取權限。非JAVA的Manifest，要import正確的才能使用
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0); //問使用者要不要允許權限。String array可一次詢問多個權限
+            }
+        }
+
+        Intent intent = new Intent();
+        intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Utils.getPhotoURI()); //拍照後存檔的位置
+        startActivityForResult(intent, REQUEST_CODE_CAMERA_ACTIVITY);
     }
 
     @Override

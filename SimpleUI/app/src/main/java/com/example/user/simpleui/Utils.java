@@ -1,11 +1,15 @@
 package com.example.user.simpleui;
 
 import android.content.Context;
+import android.net.Uri;
+import android.os.Environment;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 
 /**
@@ -46,4 +50,14 @@ public class Utils {
 
         Utils.writeFile(this, "notes", order.note + '\n');
         */
+
+    public static Uri getPhotoURI(){
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);//get pictures folder position
+        if(dir.exists() == false){ //check exists
+            dir.mkdir();
+        }
+
+        File file = new File(dir, "simpleUI_photo.png");
+        return Uri.fromFile(file);
+    }
 }
