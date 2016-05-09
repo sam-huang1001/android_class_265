@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context=".MainActivity">
+
+        <item android:id="@+id/action_take_photo"
+            android:title="Take Photo"
+            app:showAsAction="ifRoom"><!--要不要顯示整個文字，不加就是3個點-->
+
+        </item>
+
+</menu>

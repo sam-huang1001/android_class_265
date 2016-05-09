@@ -71,3 +71,6 @@ open source的server
 site1: https://dashboard.back4app.com
 site2: https://parse.com/
 sign up > new build app > 取得資料到app貼上
+
+
+xmlns:android="http://schemas.android.com/apk/res/android" 從這裡import其他xml的定義檔(屬性)，且叫做android
