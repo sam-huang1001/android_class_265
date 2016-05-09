@@ -157,30 +157,38 @@ public class MainActivity extends AppCompatActivity {
         //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, orders); //obj, layout, list
         //mListView.setAdapter(adapter);
 
+        final RealmResults results = realm.allObjects(Order.class); //取出物件所有資料
+        OrderAdapter adapter = new OrderAdapter(MainActivity.this, results.subList(0,results.size()));
+        mListView.setAdapter(adapter);
+
+
         ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Order");
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) { //objects 回傳的資料
                 if(e != null){
                     Toast.makeText(MainActivity.this, "query fail: "+e.toString(),Toast.LENGTH_LONG).show();
-
-                    //讀不到remote就讀local
-                    Realm realm = Realm.getDefaultInstance();
-                    RealmResults results = realm.allObjects(Order.class); //取出物件所有資料
-                    OrderAdapter adapter = new OrderAdapter(MainActivity.this, results.subList(0,results.size()));
-                    mListView.setAdapter(adapter);
-                    realm.close();
                     return;
                 }
 
                 List<Order> orders = new ArrayList<Order>();
+                Realm realm = Realm.getDefaultInstance();
+
                 for(int i=0; i<objects.size(); i++){
                     Order order = new Order();
                         order.setNote(objects.get(i).getString("note"));
                         order.setStoreInfo(objects.get(i).getString("storeInfo"));
                         order.setMenuResults(objects.get(i).getString("menuResults"));
                         orders.add(order);
+
+                        if(results.size() <= i){
+                            realm.beginTransaction();
+                            realm.copyToRealm(order);
+                            realm.commitTransaction();
+                        }
                 }
+
+                realm.close();
 
                 OrderAdapter adapter = new OrderAdapter(MainActivity.this, orders);
                 mListView.setAdapter(adapter);
