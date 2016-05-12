@@ -27,4 +27,6 @@ dependencies {
     compile 'com.android.support:design:23.2.1' //增加新UI lib，增加後要按右上的Sync Now
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.parse:parse-android:1.+'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
 }

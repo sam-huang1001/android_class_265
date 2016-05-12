@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) { //view = view 的layout
                 Order order = (Order) parent.getAdapter().getItem(position); //因為get是回傳Obj所以要明確指定型態
                 //Toast.makeText(MainActivity.this, order.note, Toast.LENGTH_SHORT).show(); //因為是在new的物件裡面，所以this不是指MainActivity
+                goToDetailOrder(order);
                 Snackbar.make(view, order.getNote(), Snackbar.LENGTH_LONG).show(); //新UI設計，優點: 1.可以再click進去提供更多訊息(使用setAction()定義)  2.與其他UI元件是可互動的
             }
         });
@@ -215,6 +216,9 @@ public class MainActivity extends AppCompatActivity {
                     order.setNote(objects.get(i).getString("note"));
                     order.setStoreInfo(objects.get(i).getString("storeInfo"));
                     order.setMenuResults(objects.get(i).getString("menuResults"));
+                    if(objects.get(i).getParseFile("photo") != null){
+                        order.photoURL = objects.get(i).getParseFile("photo").getUrl();
+                    }
                     orders.add(order);
 
                     if (results.size() <= i) {
@@ -322,6 +326,16 @@ public class MainActivity extends AppCompatActivity {
                 hasPhoto = true;
             }
         }
+    }
+
+    public void goToDetailOrder(Order order){
+        Intent intent = new Intent();
+        intent.setClass(this, OrderDetailActivity.class);
+        intent.putExtra("note", order.getNote());
+        intent.putExtra("storeInfo", order.getStoreInfo());
+        intent.putExtra("menuResults", order.getMenuResults());
+        intent.putExtra("photoURL", order.photoURL);
+        startActivity(intent);
     }
 
     @Override

@@ -74,3 +74,18 @@ sign up > new build app > 取得資料到app貼上
 
 
 xmlns:android="http://schemas.android.com/apk/res/android" 從這裡import其他xml的定義檔(屬性)，且叫做android
+
+ScrollView無法知道實際外框有多大，所以無法用weight
+
+
+LOG
+藍色是自己寫的部分
+
+
+https://github.com/snowdream/awesome-android github很多工具的地方
+
+盡量不要在thread中使用匿名函式
+
+在main thread不能有url的連線，因為他還有很多工作要做阿
+
+如果APP跑得很慢的話，可以用Android Device Monitor來看誰在吃資料。找自己的APP > heap >
