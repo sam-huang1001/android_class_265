@@ -1,6 +1,7 @@
 package com.example.user.simpleui;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     Spinner mSpinner;
     String menuResult;
     ProgressBar mProgressBar;
+    ProgressDialog mProgressDialog;
     ImageView photoImageView;
 
     SharedPreferences sp; //只有read
@@ -85,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         mSpinner = (Spinner) findViewById(R.id.spinner);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         photoImageView = (ImageView) findViewById(R.id.imageView);
+        mProgressDialog = new ProgressDialog(this);
         orders = new ArrayList<>();
 
         sp = getSharedPreferences("setting", Context.MODE_PRIVATE);
@@ -257,6 +260,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void click(View view){ //view為觸發的元素
+        mProgressDialog.setTitle("Loading...");
+        mProgressDialog.show();
+
         note = mEditText.getText().toString();
         String text = note;
         mTextView.setText(text);
@@ -287,6 +293,8 @@ public class MainActivity extends AppCompatActivity {
                 menuResult = "";
                 photoImageView.setImageResource(0);
                 hasPhoto = false;
+
+                mProgressDialog.dismiss();
 
                 setupListView();
             }
