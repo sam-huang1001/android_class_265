@@ -89,3 +89,5 @@ https://github.com/snowdream/awesome-android github很多工具的地方
 在main thread不能有url的連線，因為他還有很多工作要做阿
 
 如果APP跑得很慢的話，可以用Android Device Monitor來看誰在吃資料。找自己的APP > heap >
+
+static class 拿不到class外的變數

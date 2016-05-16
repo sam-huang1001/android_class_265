@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) { //objects 回傳的資料
-                if (e != null) {
+                if (e != null || objects == null) {
                     Toast.makeText(MainActivity.this, "storeInfo query fail: " + e.toString(), Toast.LENGTH_LONG).show();
                     mProgressBar.setVisibility(View.GONE); //關掉progress bar
                     return;
@@ -251,8 +251,9 @@ public class MainActivity extends AppCompatActivity {
 
                 int objSize = objects.size();
                 String[] store_arr = new String[objSize];
-                for (int i = 0; i < objects.size(); i++) {
-                    store_arr[i] = objects.get(i).getString("name");
+                for (int i = 0; i < objSize; i++) {
+                    ParseObject obj = objects.get(i);
+                    store_arr[i] = obj.getString("name") + ", " + obj.getString("address");
                 }
 
                 mProgressBar.setVisibility(View.GONE); //關掉progress bar
