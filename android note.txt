@@ -91,3 +91,5 @@ https://github.com/snowdream/awesome-android github很多工具的地方
 如果APP跑得很慢的話，可以用Android Device Monitor來看誰在吃資料。找自己的APP > heap >
 
 static class 拿不到class外的變數
+
+weak reference 當Activity被殺掉，也會跟著被殺掉
